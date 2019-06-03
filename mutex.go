@@ -34,13 +34,13 @@ type Mutex struct {
 // New creates a Mutex with the given key which must be the same
 // across the cluster nodes.
 // machines are the ectd cluster addresses
-func New(key string, ttl int, machines []string, c client.Client) (*Mutex, error) {
+func New(key string, ttl int, c client.Client) (*Mutex, error) {
 	hostname, err := os.Hostname()
 	if err != nil {
 		return nil, err
 	}
 
-	if len(key) == 0 || len(machines) == 0 {
+	if len(key) == 0 {
 		return nil, errors.New("wrong lock key or empty machines")
 	}
 
@@ -76,7 +76,7 @@ func (m *Mutex) Lock() (err error) {
 
 		m.debug("Lock node %v ERROR %v", m.key, err)
 		if try < defaultTry {
-			m.debug("Try to lock node %v again", m.key, err)
+			m.debug("Try to lock node %v again", m.key)
 		}
 	}
 	return err
