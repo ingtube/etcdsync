@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"net/http"
 	"os"
 	"sync"
 	"time"
@@ -35,21 +34,7 @@ type Mutex struct {
 // New creates a Mutex with the given key which must be the same
 // across the cluster nodes.
 // machines are the ectd cluster addresses
-func New(key string, ttl int, machines []string, tr *http.Transport) (*Mutex, error) {
-	if tr == nil {
-		tr = client.DefaultTransport.(*http.Transport)
-	}
-	cfg := client.Config{
-		Endpoints:               machines,
-		Transport:               tr,
-		HeaderTimeoutPerRequest: time.Second,
-	}
-
-	c, err := client.New(cfg)
-	if err != nil {
-		return nil, err
-	}
-
+func New(key string, ttl int, machines []string, c client.Client) (*Mutex, error) {
 	hostname, err := os.Hostname()
 	if err != nil {
 		return nil, err
