@@ -3,12 +3,22 @@ package main
 import (
 	"log"
 	"os"
+	"time"
 
-	"github.com/zieckey/etcdsync"
+	"github.com/coreos/etcd/client"
+	"github.com/ingtube/etcdsync"
 )
 
 func main() {
-	m, err := etcdsync.New("/mylock", 10, []string{"http://127.0.0.1:2379"})
+	cfg := client.Config{
+		Endpoints:               []string{"http://127.0.0.1:2379"},
+		HeaderTimeoutPerRequest: time.Second,
+	}
+	c, err := client.New(cfg)
+	if err != nil {
+		return
+	}
+	m, err := etcdsync.New("/mylock", 10, c)
 	if m == nil || err != nil {
 		log.Printf("etcdsync.New failed")
 		return

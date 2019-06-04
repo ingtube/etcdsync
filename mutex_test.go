@@ -37,8 +37,17 @@ func TestMutex(t *testing.T) {
 	log.SetFlags(log.Ltime | log.Ldate | log.Lshortfile)
 	lockKey := "/etcdsync"
 	machines := []string{"http://127.0.0.1:2379"}
+	cfg := client.Config{
+		Endpoints:               machines,
+		HeaderTimeoutPerRequest: time.Second,
+	}
+	c, err := client.New(cfg)
+	if err != nil {
+		t.Error(err)
+		return
+	}
 	kapi := newKeysAPI(machines)
-	m, err := New(lockKey, 60, machines)
+	m, err := New(lockKey, 60, c)
 	if err != nil {
 		t.Error(err)
 		return
@@ -75,9 +84,18 @@ func TestLockConcurrently(t *testing.T) {
 	lockKey := "/etcd_sync"
 	machines := []string{"http://127.0.0.1:2379"}
 	kapi := newKeysAPI(machines)
-	m1, err := New(lockKey, 60, machines)
-	m2, err := New(lockKey, 60, machines)
-	m3, err := New(lockKey, 60, machines)
+	cfg := client.Config{
+		Endpoints:               machines,
+		HeaderTimeoutPerRequest: time.Second,
+	}
+	c, err := client.New(cfg)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	m1, err := New(lockKey, 60, c)
+	m2, err := New(lockKey, 60, c)
+	m3, err := New(lockKey, 60, c)
 	if err != nil {
 		t.Error(err)
 		return
@@ -130,8 +148,18 @@ func TestLockConcurrently(t *testing.T) {
 
 func TestLockTimeout(t *testing.T) {
 	slice := make([]int, 0, 2)
-	m1, err := New("key", 2, []string{"http://127.0.0.1:2379"})
-	m2, err := New("key", 2, []string{"http://127.0.0.1:2379"})
+	machines := []string{"http://127.0.0.1:2379"}
+	cfg := client.Config{
+		Endpoints:               machines,
+		HeaderTimeoutPerRequest: time.Second,
+	}
+	c, err := client.New(cfg)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	m1, err := New("key", 2, c)
+	m2, err := New("key", 2, c)
 	if err != nil {
 		t.Error(err)
 		return
@@ -157,7 +185,16 @@ func TestRefreshLockTTL(t *testing.T) {
 	lockKey := "/etcd_sync"
 	machines := []string{"http://127.0.0.1:2379"}
 	kapi := newKeysAPI(machines)
-	m, err := New(lockKey, 10, machines)
+	cfg := client.Config{
+		Endpoints:               machines,
+		HeaderTimeoutPerRequest: time.Second,
+	}
+	c, err := client.New(cfg)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	m, err := New(lockKey, 10, c)
 	if err != nil {
 		t.Error(err)
 		return
