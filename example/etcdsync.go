@@ -5,8 +5,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/coreos/etcd/client"
 	"github.com/ingtube/etcdsync"
+	"go.etcd.io/etcd/client"
 )
 
 func main() {
