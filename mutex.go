@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/coreos/etcd/client"
+	"go.etcd.io/etcd/client"
 )
 
 const (
