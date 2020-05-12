@@ -129,7 +129,6 @@ func (m *Mutex) lock() (err error) {
 			}
 		}
 	}
-	return err
 }
 
 // Unlock unlocks m.
