@@ -1,12 +1,12 @@
 package etcdsync
 
 import (
+	"context"
 	"log"
 	"testing"
 	"time"
 
 	"go.etcd.io/etcd/client"
-	"golang.org/x/net/context"
 )
 
 func newKeysAPI(machines []string) client.KeysAPI {

@@ -1,10 +1,11 @@
 package etcdsync
 
 import (
-	"go.etcd.io/etcd/pkg/transport"
 	"net/http"
 	"os"
 	"time"
+
+	"go.etcd.io/etcd/pkg/transport"
 )
 
 func GetTransport(cafile, certfile, keyfile string) (*http.Transport, error) {
